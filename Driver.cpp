@@ -1,3 +1,6 @@
+//Author: Imaculate Mosha
+//Student Number : MSHIMA001
+//Driver file 
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -7,15 +10,20 @@ using namespace std;
 double n = 0.01;
 static double EPS = 0.0000000000001 ; //very small equaivalent to zero for floating point operations
 
-double apply(double* p, double in1, double in2, double in3, double in4){
+double apply(double* p, double in1, double in2, double in3, double in4, bool linear){
    double t = (in1 * p[0]) + (in2*p[1]) +(in3*p[2])+ (in4*p[3])+ p[4];
-   /*if(t>0)
+   if(linear){
+       return t;
+      
+   }else{
+   if(t>0)
       return 1;
    
       return -1;
      
-   */
-   return t;
+   
+   }
+  
   
 }
 void  train(double* p, double in1, double in2, double in3, double in4,double error){
@@ -35,7 +43,7 @@ void  train(double* p, double in1, double in2, double in3, double in4,double err
 
 
 
-void train(double* p, string filename){
+void train(double* p, string filename, bool linear){
 
    ifstream myfile(filename.c_str());
   
@@ -69,7 +77,7 @@ void train(double* p, string filename){
        
       double out[nSamples];
       for(int i = 0; i< nSamples ; i++){
-         double o = apply(p, v.at(i*5), v.at((i*5) + 1), v.at((i*5) +2), v.at((i*5) +3) );
+         double o = apply(p, v.at(i*5), v.at((i*5) + 1), v.at((i*5) +2), v.at((i*5) +3), linear );
          
          out[i] = o;
           
@@ -111,9 +119,22 @@ int main(){
   //each array represents a perceptron with elements weight1, weight2 and bias respectively
    double p1[5] = {0.0,0.0, 0.0, 0.0, 0.0};
   
-
-    
-   train(p1, "data.txt");
+   bool linear; 
+   char choice;
+   while(true){
+      cout<< "Enter L/l for linear or T/t for threshold activation function respectively"<<endl;
+      cin>> choice;
+   
+      if(choice == 'L' || choice  == 'l'){
+         linear  = true;
+         break;
+      }
+      else if(choice == 'T' || choice  == 't'){
+         linear  = false;
+         break;
+      }
+   }
+   train(p1, "data.txt", linear);
    
  
    
