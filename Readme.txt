@@ -34,7 +34,7 @@ output.txt
 Answers to Questions:
 Question 1: How many iterations of the percep-
 tron learning rule does it take before an error = 0 is achieved?
-For a linear activation function it took 2622 iterations to converge to minimum error
+For a linear activation function it took 2815 iterations to converge to minimum error
 
 Question 2: Change the activation function to a threshold function and re-
 run the perceptron learning rule. Is an error = 0 achieved in the same number

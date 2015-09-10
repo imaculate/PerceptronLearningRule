@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 double n = 0.01;
-static double EPS = 0.0000000000001 ; //very small equaivalent to zero for floating point operations
+static double EPS = 0.0000001 ; //very small equaivalent to zero for floating point operations
 
 double apply(double* p, double in1, double in2, double in3, double in4, bool linear){
    double t = (in1 * p[0]) + (in2*p[1]) +(in3*p[2])+ (in4*p[3])+ p[4];
@@ -84,6 +84,7 @@ void train(double* p, string filename, bool linear){
                   
       }
       double data_error=0;
+      bool noerror = true;
       for(int i = 0; i< nSamples ; i++){
          data_error =  v.at((i*5) +4) - out[i];//t - o
          
@@ -92,7 +93,10 @@ void train(double* p, string filename, bool linear){
          
          outfile<< p[0]<< " , "<< p[1]<< " , "<< p[2] << " , " << p[3] << " , " << p[4] << " , "<<out[i] << " , "<< data_error<<endl;
       
-         error+= (data_error * data_error/2.0); 
+         if(abs(data_error)>EPS){
+            noerror = false;
+         }
+    
          
                   
       }
@@ -101,7 +105,7 @@ void train(double* p, string filename, bool linear){
       
       
       
-      if(abs(error)<=EPS)
+      if(noerror)
          break;
          
       
@@ -143,7 +147,40 @@ int main(){
    
       
    cout<<"The perceptron p1 has weights "<< p1[0] <<" , " <<p1[1] <<" , " <<p1[2]<<" , " <<p1[3] <<" and bias " << p1[4]<<endl;
+   
+    vector<double> test;
+   test.push_back(1.0); test.push_back(-1.0);test.push_back(1.0);test.push_back(-1.0);test.push_back(1.0);
+   test.push_back(1.0); test.push_back(1.0);test.push_back(1.0);test.push_back(1.0);test.push_back(1.0);   
+    test.push_back(1.0); test.push_back(1.0);test.push_back(1.0);test.push_back(-1.0);test.push_back(-1.0);
+      test.push_back(1.0); test.push_back(-1.0);test.push_back(-1.0);test.push_back(1.0);test.push_back(-1.0);
+      //test linear
+      if(linear){
+   for(int i =0 ; i< test.size()/5; i++){
 
+      double output_linear = apply(p1, test.at(i*5 ), test.at(i*5 +1), test.at(i*5 +2), test.at(i*5 +3 ), linear);
+     
+      if((output_linear  - test.at(i*5 + 4))<EPS){
+         cout<<"Correct!"<<endl;
+      }else{
+         cout<<"Incorrect!"<<endl;
+      }  
+   }
+   }else{
+   
+   //test threshold
+    for(int i =0 ; i< test.size()/5; i++){
+
+      double output_threshold = apply(p1, test.at(i*5 ), test.at(i*5 +1), test.at(i*5 +2), test.at(i*5 +3 ), linear);
+       
+      if(output_threshold ==(int)test.at(i*5 + 4)){
+         cout<<"Correct!"<<endl;
+      }
+      else{
+         cout<<"Incorrect!"<<endl;
+      }  
+   }
+}
+   
    
   
    
